@@ -142,5 +142,49 @@ def matches():
         all_matches=all_matches
     )
 
+@app.route("/suggestions")
+def suggestions():
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT
+            lost_items.id AS lost_id,
+            lost_items.item_name AS lost_item,
+            lost_items.category AS lost_category,
+            lost_items.color AS lost_color,
+            lost_items.brand AS lost_brand,
+            lost_items.location AS lost_location,
+            found_items.id AS found_id,
+            found_items.item_name AS found_item,
+            found_items.category AS found_category,
+            found_items.color AS found_color,
+            found_items.brand AS found_brand,
+            found_items.location AS found_location,
+            (
+                (lost_items.category = found_items.category) +
+                (lost_items.color = found_items.color) +
+                (lost_items.brand = found_items.brand) +
+                (lost_items.location = found_items.location)
+            ) AS match_score
+        FROM lost_items
+        JOIN found_items
+        WHERE lost_items.status = 'Lost'
+        AND found_items.status = 'Found'
+        HAVING match_score >= 2
+        ORDER BY match_score DESC
+    """)
+
+    suggested_matches = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template(
+        "suggestions.html",
+        suggested_matches=suggested_matches
+    )
+
+
 if __name__ == "__main__":
     app.run(debug=True)
