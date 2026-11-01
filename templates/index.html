@@ -1,76 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FindIt - Lost and Found</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            background: #f4f6f8;
-        }
+{% extends "base.html" %}
 
-        header {
-            background: #0b5ed7;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
+{% block title %}FindIt - Home{% endblock %}
 
-        main {
-            max-width: 800px;
-            margin: 40px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
+{% block content %}
+<h1>Welcome to FindIt</h1>
 
-        h1 {
-            color: #0b5ed7;
-        }
+<p>
+    FindIt helps people in Uganda report lost and found items such as phones,
+    national IDs, student cards, bags, keys, and documents.
+</p>
 
-        .buttons {
-            margin-top: 30px;
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 12px 25px;
-            margin: 10px;
-            background: #0b5ed7;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-        }
-
-        .btn:hover {
-            background: #084298;
-        }
-    </style>
-</head>
-<body>
-
-    <header>
-        <h1>FindIt</h1>
-        <p>Report lost items. Report found items. Reunite owners with their property.</p>
-    </header>
-
-    <main>
-        <h2>Welcome to FindIt</h2>
-        <p>
-            FindIt helps people in Uganda report lost and found items such as phones,
-            national IDs, student cards, bags, keys, and documents.
-        </p>
-
-        <div class="buttons">
-            <a class="btn" href="/report-lost">Report Lost Item</a>
-            <a class="btn" href="/report-found">Report Found Item</a>
-            <a class="btn" href="/items">View Items</a>
-        </div>
-    </main>
-
-</body>
-</html>
+<a class="btn" href="/report-lost">Report Lost Item</a>
+<a class="btn" href="/report-found">Report Found Item</a>
+<a class="btn" href="/items">View Items</a>
+<a class="btn" href="/search">Search Items</a>
+<a class="btn" href="/suggestions">View Match Suggestions</a>
+<a class="btn" href="/matches">Match Items</a>
+{% endblock %}

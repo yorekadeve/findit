@@ -1,140 +1,61 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Report Lost Item - FindIt</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f8;
-            margin: 0;
+{% extends "base.html" %}
+
+{% block title %}Report Lost Item - FindIt{% endblock %}
+
+{% block content %}
+<h2>Report Lost Item</h2>
+
+<form action="/report-lost" method="POST" onsubmit="return validateForm();">
+    <label for="item_name">Item Name</label>
+    <input type="text" id="item_name" name="item_name" required>
+
+    <label for="category">Category</label>
+    <select id="category" name="category" required>
+        <option value="">Select category</option>
+        <option value="Phone">Phone</option>
+        <option value="ID or Card">ID or Card</option>
+        <option value="Bag">Bag</option>
+        <option value="Keys">Keys</option>
+        <option value="Wallet">Wallet</option>
+        <option value="Laptop">Laptop</option>
+        <option value="Documents">Documents</option>
+        <option value="Other">Other</option>
+    </select>
+
+    <label for="color">Color</label>
+    <input type="text" id="color" name="color">
+
+    <label for="brand">Brand</label>
+    <input type="text" id="brand" name="brand">
+
+    <label for="description">Description</label>
+    <textarea id="description" name="description" rows="4"></textarea>
+
+    <label for="location">Location Lost</label>
+    <input type="text" id="location" name="location" required>
+
+    <label for="date_lost">Date Lost</label>
+    <input type="date" id="date_lost" name="date_lost" required>
+
+    <label for="contact">Contact</label>
+    <input type="text" id="contact" name="contact" required>
+
+    <button type="submit">Submit Lost Item</button>
+</form>
+
+<script>
+    function validateForm() {
+        let itemName = document.getElementById("item_name").value;
+        let category = document.getElementById("category").value;
+        let location = document.getElementById("location").value;
+        let contact = document.getElementById("contact").value;
+
+        if (itemName === "" || category === "" || location === "" || contact === "") {
+            alert("Please fill in all required fields.");
+            return false;
         }
 
-        header {
-            background: #0b5ed7;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-
-        main {
-            max-width: 600px;
-            margin: 40px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        h2 {
-            color: #0b5ed7;
-        }
-
-        label {
-            display: block;
-            margin-top: 15px;
-            font-weight: bold;
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-        }
-
-        button {
-            margin-top: 20px;
-            width: 100%;
-            padding: 12px;
-            background: #0b5ed7;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background: #084298;
-        }
-
-        .back {
-            display: inline-block;
-            margin-top: 20px;
-            color: #0b5ed7;
-            text-decoration: none;
-        }
-    </style>
-</head>
-<body>
-
-    <header>
-        <h1>FindIt</h1>
-        <p>Report an item you have lost</p>
-    </header>
-
-    <main>
-        <h2>Report Lost Item</h2>
-
-        <form action="/report-lost" method="POST" onsubmit="return validateForm();">
-            <label for="item_name">Item Name</label>
-            <input type="text" id="item_name" name="item_name" required>
-
-            <label for="category">Category</label>
-            <select id="category" name="category" required>
-                <option value="">Select category</option>
-                <option value="Phone">Phone</option>
-                <option value="ID or Card">ID or Card</option>
-                <option value="Bag">Bag</option>
-                <option value="Keys">Keys</option>
-                <option value="Wallet">Wallet</option>
-                <option value="Laptop">Laptop</option>
-                <option value="Documents">Documents</option>
-                <option value="Other">Other</option>
-            </select>
-
-            <label for="color">Color</label>
-            <input type="text" id="color" name="color">
-
-            <label for="brand">Brand</label>
-            <input type="text" id="brand" name="brand">
-
-            <label for="description">Description</label>
-            <textarea id="description" name="description" rows="4"></textarea>
-
-            <label for="location">Location Lost</label>
-            <input type="text" id="location" name="location" required>
-
-            <label for="date_lost">Date Lost</label>
-            <input type="date" id="date_lost" name="date_lost" required>
-
-            <label for="contact">Contact</label>
-            <input type="text" id="contact" name="contact" required>
-
-            <button type="submit">Submit Lost Item</button>
-        </form>
-
-        <a class="back" href="/">Back to Home</a>
-    </main>
-
-    <script>
-        function validateForm() {
-            let itemName = document.getElementById("item_name").value;
-            let category = document.getElementById("category").value;
-            let location = document.getElementById("location").value;
-            let contact = document.getElementById("contact").value;
-
-            if (itemName === "" || category === "" || location === "" || contact === "") {
-                alert("Please fill in all required fields.");
-                return false;
-            }
-
-            return true;
-        }
-    </script>
-
-</body>
-</html>
+        return true;
+    }
+</script>
+{% endblock %}

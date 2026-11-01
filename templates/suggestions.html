@@ -1,115 +1,39 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Match Suggestions - FindIt</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f8;
-            margin: 0;
-        }
+{% extends "base.html" %}
 
-        header {
-            background: #0b5ed7;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
+{% block title %}Match Suggestions - FindIt{% endblock %}
 
-        main {
-            max-width: 1000px;
-            margin: 40px auto;
-        }
+{% block content %}
+<h2>Match Suggestions</h2>
 
-        h2 {
-            color: #0b5ed7;
-        }
+{% for match in suggested_matches %}
+<div class="card">
+    <h3>
+        {{ match.lost_item }}
+        <span class="score {% if match.match_score >= 3 %}high{% endif %}">
+            {{ match.match_score }}/4 match
+        </span>
+    </h3>
 
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
+    <p>
+        <strong>Lost:</strong>
+        {{ match.lost_item }} |
+        {{ match.lost_category }} |
+        {{ match.lost_color }} |
+        {{ match.lost_brand }} |
+        {{ match.lost_location }}
+    </p>
 
-        .score {
-            display: inline-block;
-            background: #ffc107;
-            color: #000;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-weight: bold;
-        }
+    <p>
+        <strong>Found:</strong>
+        {{ match.found_item }} |
+        {{ match.found_category }} |
+        {{ match.found_color }} |
+        {{ match.found_brand }} |
+        {{ match.found_location }}
+    </p>
 
-        .high {
-            background: #198754;
-            color: white;
-        }
+    <a class="btn" href="/matches">Go to Matches</a>
+</div>
+{% endfor %}
 
-        .btn {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 10px 20px;
-            background: #0b5ed7;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-        }
-
-        .back {
-            display: inline-block;
-            margin-top: 20px;
-            color: #0b5ed7;
-            text-decoration: none;
-        }
-    </style>
-</head>
-<body>
-
-    <header>
-        <h1>FindIt</h1>
-        <p>Possible matches between lost and found items</p>
-    </header>
-
-    <main>
-        <h2>Match Suggestions</h2>
-
-        {% for match in suggested_matches %}
-        <div class="card">
-            <h3>
-                {{ match.lost_item }}
-                <span class="score {% if match.match_score >= 3 %}high{% endif %}">
-                    {{ match.match_score }}/4 match
-                </span>
-            </h3>
-
-            <p>
-                <strong>Lost:</strong>
-                {{ match.lost_item }} |
-                {{ match.lost_category }} |
-                {{ match.lost_color }} |
-                {{ match.lost_brand }} |
-                {{ match.lost_location }}
-            </p>
-
-            <p>
-                <strong>Found:</strong>
-                {{ match.found_item }} |
-                {{ match.found_category }} |
-                {{ match.found_color }} |
-                {{ match.found_brand }} |
-                {{ match.found_location }}
-            </p>
-
-            <a class="btn" href="/matches">Go to Matches</a>
-        </div>
-        {% endfor %}
-
-        <a class="back" href="/">Back to Home</a>
-    </main>
-
-</body>
-</html>
+{% endblock %}

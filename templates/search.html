@@ -1,189 +1,101 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Items - FindIt</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f8;
-            margin: 0;
-        }
+{% extends "base.html" %}
 
-        header {
-            background: #0b5ed7;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
+{% block title %}Search Items - FindIt{% endblock %}
 
-        main {
-            max-width: 900px;
-            margin: 40px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
+{% block content %}
+<h2>Search Items</h2>
 
-        label {
-            display: block;
-            margin-top: 15px;
-            font-weight: bold;
-        }
+<form action="/search" method="POST">
+    <label for="category">Category</label>
+    <select name="category" id="category">
+        <option value="">All categories</option>
+        <option value="Phone">Phone</option>
+        <option value="ID or Card">ID or Card</option>
+        <option value="Bag">Bag</option>
+        <option value="Keys">Keys</option>
+        <option value="Wallet">Wallet</option>
+        <option value="Laptop">Laptop</option>
+        <option value="Documents">Documents</option>
+        <option value="Other">Other</option>
+    </select>
 
-        input, select {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-        }
+    <label for="color">Color</label>
+    <input type="text" name="color" id="color">
 
-        button {
-            margin-top: 20px;
-            width: 100%;
-            padding: 12px;
-            background: #0b5ed7;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            cursor: pointer;
-        }
+    <label for="brand">Brand</label>
+    <input type="text" name="brand" id="brand">
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 30px;
-        }
+    <label for="location">Location</label>
+    <input type="text" name="location" id="location">
 
-        th, td {
-            padding: 12px;
-            border: 1px solid #ddd;
-            text-align: left;
-        }
+    <button type="submit">Search</button>
+</form>
 
-        th {
-            background: #0b5ed7;
-            color: white;
-        }
+{% if searched %}
 
-        .back {
-            display: inline-block;
-            margin-top: 20px;
-            color: #0b5ed7;
-            text-decoration: none;
-        }
-    </style>
-</head>
-<body>
+<h2>Found Items</h2>
 
-    <header>
-        <h1>FindIt</h1>
-        <p>Search lost and found items</p>
-    </header>
+{% if found_results %}
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Item</th>
+        <th>Category</th>
+        <th>Color</th>
+        <th>Brand</th>
+        <th>Location</th>
+        <th>Date Found</th>
+        <th>Status</th>
+    </tr>
 
-    <main>
-        <h2>Search Items</h2>
+    {% for item in found_results %}
+    <tr>
+        <td>{{ item.id }}</td>
+        <td>{{ item.item_name }}</td>
+        <td>{{ item.category }}</td>
+        <td>{{ item.color }}</td>
+        <td>{{ item.brand }}</td>
+        <td>{{ item.location }}</td>
+        <td>{{ item.date_found }}</td>
+        <td>{{ item.status }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No found items matched your search.</p>
+{% endif %}
 
-        <form action="/search" method="POST">
-            <label for="category">Category</label>
-            <select name="category" id="category">
-                <option value="">All categories</option>
-                <option value="Phone">Phone</option>
-                <option value="ID or Card">ID or Card</option>
-                <option value="Bag">Bag</option>
-                <option value="Keys">Keys</option>
-                <option value="Wallet">Wallet</option>
-                <option value="Laptop">Laptop</option>
-                <option value="Documents">Documents</option>
-                <option value="Other">Other</option>
-            </select>
+<h2>Lost Items</h2>
 
-            <label for="color">Color</label>
-            <input type="text" name="color" id="color">
+{% if lost_results %}
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Item</th>
+        <th>Category</th>
+        <th>Color</th>
+        <th>Brand</th>
+        <th>Location</th>
+        <th>Date Lost</th>
+        <th>Status</th>
+    </tr>
 
-            <label for="brand">Brand</label>
-            <input type="text" name="brand" id="brand">
+    {% for item in lost_results %}
+    <tr>
+        <td>{{ item.id }}</td>
+        <td>{{ item.item_name }}</td>
+        <td>{{ item.category }}</td>
+        <td>{{ item.color }}</td>
+        <td>{{ item.brand }}</td>
+        <td>{{ item.location }}</td>
+        <td>{{ item.date_lost }}</td>
+        <td>{{ item.status }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% else %}
+<p>No lost items matched your search.</p>
+{% endif %}
 
-            <label for="location">Location</label>
-            <input type="text" name="location" id="location">
-
-            <button type="submit">Search</button>
-        </form>
-
-        {% if searched %}
-
-        <h2>Found Items</h2>
-
-        {% if found_results %}
-        <table>
-            <tr>
-                <th>ID</th>
-                <th>Item</th>
-                <th>Category</th>
-                <th>Color</th>
-                <th>Brand</th>
-                <th>Location</th>
-                <th>Date Found</th>
-                <th>Status</th>
-            </tr>
-
-            {% for item in found_results %}
-            <tr>
-                <td>{{ item.id }}</td>
-                <td>{{ item.item_name }}</td>
-                <td>{{ item.category }}</td>
-                <td>{{ item.color }}</td>
-                <td>{{ item.brand }}</td>
-                <td>{{ item.location }}</td>
-                <td>{{ item.date_found }}</td>
-                <td>{{ item.status }}</td>
-            </tr>
-            {% endfor %}
-        </table>
-        {% else %}
-        <p>No found items matched your search.</p>
-        {% endif %}
-
-        <h2>Lost Items</h2>
-
-        {% if lost_results %}
-        <table>
-            <tr>
-                <th>ID</th>
-                <th>Item</th>
-                <th>Category</th>
-                <th>Color</th>
-                <th>Brand</th>
-                <th>Location</th>
-                <th>Date Lost</th>
-                <th>Status</th>
-            </tr>
-
-            {% for item in lost_results %}
-            <tr>
-                <td>{{ item.id }}</td>
-                <td>{{ item.item_name }}</td>
-                <td>{{ item.category }}</td>
-                <td>{{ item.color }}</td>
-                <td>{{ item.brand }}</td>
-                <td>{{ item.location }}</td>
-                <td>{{ item.date_lost }}</td>
-                <td>{{ item.status }}</td>
-            </tr>
-            {% endfor %}
-        </table>
-        {% else %}
-        <p>No lost items matched your search.</p>
-        {% endif %}
-
-        {% endif %}
-
-        <a class="back" href="/">Back to Home</a>
-    </main>
-
-</body>
-</html>
+{% endif %}
+{% endblock %}

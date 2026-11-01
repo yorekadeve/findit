@@ -1,153 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Match Items - FindIt</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f8;
-            margin: 0;
-        }
+{% extends "base.html" %}
 
-        header {
-            background: #0b5ed7;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
+{% block title %}Match Items - FindIt{% endblock %}
 
-        main {
-            max-width: 800px;
-            margin: 40px auto;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
+{% block content %}
+<h2>Create a Match</h2>
 
-        label {
-            display: block;
-            margin-top: 15px;
-            font-weight: bold;
-        }
+<form action="/matches" method="POST">
+    <label for="lost_item_id">Lost Item</label>
+    <select name="lost_item_id" required>
+        <option value="">Select lost item</option>
 
-        select {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-        }
+        {% for item in lost_items %}
+        <option value="{{ item.id }}">
+            {{ item.id }} - {{ item.item_name }} ({{ item.category }})
+        </option>
+        {% endfor %}
+    </select>
 
-        button {
-            margin-top: 20px;
-            width: 100%;
-            padding: 12px;
-            background: #0b5ed7;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            cursor: pointer;
-        }
+    <label for="found_item_id">Found Item</label>
+    <select name="found_item_id" required>
+        <option value="">Select found item</option>
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 40px;
-        }
+        {% for item in found_items %}
+        <option value="{{ item.id }}">
+            {{ item.id }} - {{ item.item_name }} ({{ item.category }})
+        </option>
+        {% endfor %}
+    </select>
 
-        th, td {
-            padding: 12px;
-            border: 1px solid #ddd;
-            text-align: left;
-        }
+    <button type="submit">Create Match</button>
+</form>
 
-        th {
-            background: #0b5ed7;
-            color: white;
-        }
+<h2>All Matches</h2>
 
-        .back {
-            display: inline-block;
-            margin-top: 20px;
-            color: #0b5ed7;
-            text-decoration: none;
-        }
-    </style>
-</head>
-<body>
+<table>
+    <tr>
+        <th>Match ID</th>
+        <th>Lost Item</th>
+        <th>Found Item</th>
+        <th>Date</th>
+        <th>Status</th>
+        <th>Action</th>
+    </tr>
 
-    <header>
-        <h1>FindIt</h1>
-        <p>Match a lost item with a found item</p>
-    </header>
-
-    <main>
-        <h2>Create a Match</h2>
-
-        <form action="/matches" method="POST">
-            <label for="lost_item_id">Lost Item</label>
-            <select name="lost_item_id" required>
-                <option value="">Select lost item</option>
-
-                {% for item in lost_items %}
-                <option value="{{ item.id }}">
-                    {{ item.id }} - {{ item.item_name }} ({{ item.category }})
-                </option>
-                {% endfor %}
-            </select>
-
-            <label for="found_item_id">Found Item</label>
-            <select name="found_item_id" required>
-                <option value="">Select found item</option>
-
-                {% for item in found_items %}
-                <option value="{{ item.id }}">
-                    {{ item.id }} - {{ item.item_name }} ({{ item.category }})
-                </option>
-                {% endfor %}
-            </select>
-
-            <button type="submit">Create Match</button>
-        </form>
-
-        <h2>All Matches</h2>
-
-        <table>
-            <tr>
-                <th>Match ID</th>
-                <th>Lost Item</th>
-                <th>Found Item</th>
-                <th>Date</th>
-                <th>Status</th>
-                <th>Action</th>
-        </tr>
-
-            {% for match in all_matches %}
-            <tr>
-                <td>{{ match.id }}</td>
-                <td>{{ match.lost_item }}</td>
-                <td>{{ match.found_item }}</td>
-                <td>{{ match.match_date }}</td>
-                <td>{{ match.status }}</td>
-                <td>
-                    {% if match.status == 'Pending' %}
-                    <a href="/confirm-match/{{ match.id }}">Confirm</a>
-                    {% elif match.status == 'Confirmed' %}
-                    <a href="/return-item/{{ match.id }}">Mark as Returned</a>
-                    {% else %}
-                        Completed
-                    {% endif %}
-                </td>
-            </tr>
-            S{% endfor %}
-        </table>
-
-        <a class="back" href="/">Back to Home</a>
-    </main>
-
-</body>
-</html>
+    {% for match in all_matches %}
+    <tr>
+        <td>{{ match.id }}</td>
+        <td>{{ match.lost_item }}</td>
+        <td>{{ match.found_item }}</td>
+        <td>{{ match.match_date }}</td>
+        <td>{{ match.status }}</td>
+        <td>
+            {% if match.status == 'Pending' %}
+                <a href="/confirm-match/{{ match.id }}">Confirm</a>
+            {% elif match.status == 'Confirmed' %}
+                <a href="/return-item/{{ match.id }}">Mark as Returned</a>
+            {% else %}
+                Completed
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
