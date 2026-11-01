@@ -1,0 +1,39 @@
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Flask instance folder
+instance/
+
+# Environment variables
+.env
+.env.*
+
+# MySQL dumps and database files
+*.sql
+*.sql.gz
+*.db
+*.sqlite3
+
+# Uploaded files
+uploads/
+static/uploads/
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# VS Code
+.vscode/
+
+# PyCharm
+.idea/
+
+.env
+.env.*

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Found Item - FindIt</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+        }
+
+        header {
+            background: #198754;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        main {
+            max-width: 600px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #198754;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            background: #198754;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #146c43;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 20px;
+            color: #198754;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>FindIt</h1>
+        <p>Report an item you have found</p>
+    </header>
+
+    <main>
+        <h2>Report Found Item</h2>
+
+        <form action="/report-found" method="POST">
+            <label for="item_name">Item Name</label>
+            <input type="text" id="item_name" name="item_name" required>
+
+            <label for="category">Category</label>
+            <select id="category" name="category" required>
+                <option value="">Select category</option>
+                <option value="Phone">Phone</option>
+                <option value="ID or Card">ID or Card</option>
+                <option value="Bag">Bag</option>
+                <option value="Keys">Keys</option>
+                <option value="Wallet">Wallet</option>
+                <option value="Laptop">Laptop</option>
+                <option value="Documents">Documents</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <label for="color">Color</label>
+            <input type="text" id="color" name="color">
+
+            <label for="brand">Brand</label>
+            <input type="text" id="brand" name="brand">
+
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="4"></textarea>
+
+            <label for="location">Location Found</label>
+            <input type="text" id="location" name="location" required>
+
+            <label for="date_found">Date Found</label>
+            <input type="date" id="date_found" name="date_found" required>
+
+            <label for="contact">Your Contact</label>
+            <input type="text" id="contact" name="contact" required>
+
+            <button type="submit">Submit Found Item</button>
+        </form>
+
+        <a class="back" href="/">Back to Home</a>
+    </main>
+
+</body>
+</html>

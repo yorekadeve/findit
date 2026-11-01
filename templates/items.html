@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Items - FindIt</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+        }
+
+        header {
+            background: #0b5ed7;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #0b5ed7;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: #0b5ed7;
+            color: white;
+        }
+
+        .found-header {
+            background: #198754;
+        }
+
+        .back {
+            display: inline-block;
+            margin-top: 20px;
+            color: #0b5ed7;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>FindIt</h1>
+        <p>All reported lost and found items</p>
+    </header>
+
+    <main>
+        <h2>Lost Items</h2>
+
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Item</th>
+                <th>Category</th>
+                <th>Color</th>
+                <th>Brand</th>
+                <th>Location</th>
+                <th>Date Lost</th>
+                <th>Status</th>
+            </tr>
+
+            {% for item in lost_items %}
+            <tr>
+                <td>{{ item.id }}</td>
+                <td>{{ item.item_name }}</td>
+                <td>{{ item.category }}</td>
+                <td>{{ item.color }}</td>
+                <td>{{ item.brand }}</td>
+                <td>{{ item.location }}</td>
+                <td>{{ item.date_lost }}</td>
+                <td>{{ item.status }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <h2>Found Items</h2>
+
+        <table>
+            <tr class="found-header">
+                <th>ID</th>
+                <th>Item</th>
+                <th>Category</th>
+                <th>Color</th>
+                <th>Brand</th>
+                <th>Location</th>
+                <th>Date Found</th>
+                <th>Status</th>
+            </tr>
+
+            {% for item in found_items %}
+            <tr>
+                <td>{{ item.id }}</td>
+                <td>{{ item.item_name }}</td>
+                <td>{{ item.category }}</td>
+                <td>{{ item.color }}</td>
+                <td>{{ item.brand }}</td>
+                <td>{{ item.location }}</td>
+                <td>{{ item.date_found }}</td>
+                <td>{{ item.status }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+
+        <a class="back" href="/">Back to Home</a>
+    </main>
+
+</body>
+</html>
