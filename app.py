@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+from flask import Flask, render_template, request, redirect, url_for
 import mysql.connector
 import os
 from datetime import date
@@ -185,6 +186,113 @@ def suggestions():
         suggested_matches=suggested_matches
     )
 
+@app.route("/search", methods=["GET", "POST"])
+def search():
+    found_results = []
+    lost_results = []
+    searched = False
+
+    if request.method == "POST":
+        category = request.form.get("category", "")
+        color = request.form.get("color", "")
+        brand = request.form.get("brand", "")
+        location = request.form.get("location", "")
+
+        searched = True
+
+        conn = get_db()
+        cursor = conn.cursor(dictionary=True)
+
+        cursor.execute("""
+            SELECT * FROM found_items
+            WHERE category LIKE %s
+            AND color LIKE %s
+            AND brand LIKE %s
+            AND location LIKE %s
+            ORDER BY id DESC
+        """, (f"%{category}%", f"%{color}%", f"%{brand}%", f"%{location}%"))
+
+        found_results = cursor.fetchall()
+
+        cursor.execute("""
+            SELECT * FROM lost_items
+            WHERE category LIKE %s
+            AND color LIKE %s
+            AND brand LIKE %s
+            AND location LIKE %s
+            ORDER BY id DESC
+        """, (f"%{category}%", f"%{color}%", f"%{brand}%", f"%{location}%"))
+
+        lost_results = cursor.fetchall()
+
+        cursor.close()
+        conn.close()
+
+    return render_template(
+        "search.html",
+        found_results=found_results,
+        lost_results=lost_results,
+        searched=searched
+    )
+
+@app.route("/confirm-match/<int:match_id>")
+def confirm_match(match_id):
+    conn = get_db()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        UPDATE matches
+        SET status = 'Confirmed'
+        WHERE id = %s
+    """, (match_id,))
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return redirect(url_for("matches"))
+
+@app.route("/return-item/<int:match_id>")
+def return_item(match_id):
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT lost_item_id, found_item_id
+        FROM matches
+        WHERE id = %s
+    """, (match_id,))
+
+    match = cursor.fetchone()
+
+    if match:
+        lost_item_id = match["lost_item_id"]
+        found_item_id = match["found_item_id"]
+
+        cursor.execute("""
+            UPDATE matches
+            SET status = 'Returned'
+            WHERE id = %s
+        """, (match_id,))
+
+        cursor.execute("""
+            UPDATE lost_items
+            SET status = 'Returned'
+            WHERE id = %s
+        """, (lost_item_id,))
+
+        cursor.execute("""
+            UPDATE found_items
+            SET status = 'Returned'
+            WHERE id = %s
+        """, (found_item_id,))
+
+        conn.commit()
+
+    cursor.close()
+    conn.close()
+
+    return redirect(url_for("matches"))
 
 if __name__ == "__main__":
     app.run(debug=True)

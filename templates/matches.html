@@ -123,7 +123,8 @@
                 <th>Found Item</th>
                 <th>Date</th>
                 <th>Status</th>
-            </tr>
+                <th>Action</th>
+        </tr>
 
             {% for match in all_matches %}
             <tr>
@@ -132,8 +133,17 @@
                 <td>{{ match.found_item }}</td>
                 <td>{{ match.match_date }}</td>
                 <td>{{ match.status }}</td>
+                <td>
+                    {% if match.status == 'Pending' %}
+                    <a href="/confirm-match/{{ match.id }}">Confirm</a>
+                    {% elif match.status == 'Confirmed' %}
+                    <a href="/return-item/{{ match.id }}">Mark as Returned</a>
+                    {% else %}
+                        Completed
+                    {% endif %}
+                </td>
             </tr>
-            {% endfor %}
+            S{% endfor %}
         </table>
 
         <a class="back" href="/">Back to Home</a>
