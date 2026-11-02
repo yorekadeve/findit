@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Lost Report - FindIt{% endblock %}
+
+{% block content %}
+<h2>Edit Lost Report</h2>
+
+<form action="/edit-lost/{{ item.id }}" method="POST">
+    <label for="item_name">Item Name</label>
+    <input type="text" id="item_name" name="item_name" value="{{ item.item_name }}" required>
+
+    <label for="category">Category</label>
+    <input type="text" id="category" name="category" value="{{ item.category }}" required>
+
+    <label for="color">Color</label>
+    <input type="text" id="color" name="color" value="{{ item.color }}">
+
+    <label for="brand">Brand</label>
+    <input type="text" id="brand" name="brand" value="{{ item.brand }}">
+
+    <label for="description">Description</label>
+    <textarea id="description" name="description">{{ item.description }}</textarea>
+
+    <label for="location">Location</label>
+    <input type="text" id="location" name="location" value="{{ item.location }}">
+
+    <label for="date_lost">Date Lost</label>
+    <input type="date" id="date_lost" name="date_lost" value="{{ item.date_lost }}">
+
+    <label for="contact">Contact</label>
+    <input type="text" id="contact" name="contact" value="{{ item.contact }}">
+
+    <button type="submit">Update Report</button>
+</form>
+{% endblock %}

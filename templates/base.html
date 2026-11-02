@@ -161,18 +161,88 @@
             border: 1px solid #ffeeba;
         }
 
-	.delete-button {
-    	    background-color: #dc3545;
-    	    color: white;
+	    .delete-button {
+            background-color: #dc3545;
+            color: white;
             border: none;
             padding: 6px 12px;
             border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            line-height: 1.5;
             cursor: pointer;
-       }
+        }
 
-      .delete-button:hover {
-           background-color: #c82333;
-      }
+        .delete-button:hover {
+            background-color: #c82333;
+        }
+      .edit-link {
+           color: #007bff;
+           text-decoration: none;
+           font-weight: bold;
+           margin-right: 8px;
+     }
+
+     .edit-link:hover {
+           text-decoration: underline;
+     }
+
+     .edit-button {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: bold;
+            line-height: 1.5;
+            margin-right: 8px;
+            cursor: pointer;
+     }
+
+    .edit-button:hover {
+            background-color: #218838;
+    }
+
+    a.edit-button,
+button.delete-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    width: 110px;
+    height: 44px;
+    padding: 0;
+    margin: 0;
+    border: none;
+    border-radius: 6px;
+    font-family: inherit;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: normal;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+a.edit-button {
+    background-color: #28a745;
+    margin-bottom: 10px;
+}
+
+a.edit-button:hover {
+    background-color: #218838;
+}
+
+button.delete-button {
+    background-color: #dc3545;
+}
+
+button.delete-button:hover {
+    background-color: #c82333;
+}
     </style>
 </head>
 <body>

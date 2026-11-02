@@ -137,6 +137,68 @@ def delete_lost(item_id):
     flash("Lost item report deleted successfully.", "success")
     return redirect(url_for("my_reports"))
 
+@app.route("/edit-lost/<int:item_id>", methods=["GET", "POST"])
+@login_required
+def edit_lost(item_id):
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+
+    if request.method == "POST":
+        item_name = request.form["item_name"]
+        category = request.form["category"]
+        color = request.form["color"]
+        brand = request.form["brand"]
+        description = request.form["description"]
+        location = request.form["location"]
+        date_lost = request.form["date_lost"]
+        contact = request.form["contact"]
+
+        cursor.execute("""
+            UPDATE lost_items
+            SET item_name = %s,
+                category = %s,
+                color = %s,
+                brand = %s,
+                description = %s,
+                location = %s,
+                date_lost = %s,
+                contact = %s
+            WHERE id = %s AND user_id = %s
+        """, (
+            item_name,
+            category,
+            color,
+            brand,
+            description,
+            location,
+            date_lost,
+            contact,
+            item_id,
+            session["user_id"]
+        ))
+
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        flash("Lost item report updated successfully.", "success")
+        return redirect(url_for("my_reports"))
+
+    cursor.execute("""
+        SELECT * FROM lost_items
+        WHERE id = %s AND user_id = %s
+    """, (item_id, session["user_id"]))
+
+    item = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    if item is None:
+        flash("Report not found.", "warning")
+        return redirect(url_for("my_reports"))
+
+    return render_template("edit_lost.html", item=item)
 
 @app.route("/delete-found/<int:item_id>", methods=["POST"])
 @login_required
@@ -155,6 +217,69 @@ def delete_found(item_id):
 
     flash("Found item report deleted successfully.", "success")
     return redirect(url_for("my_reports"))
+
+@app.route("/edit-found/<int:item_id>", methods=["GET", "POST"])
+@login_required
+def edit_found(item_id):
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+
+    if request.method == "POST":
+        item_name = request.form["item_name"]
+        category = request.form["category"]
+        color = request.form["color"]
+        brand = request.form["brand"]
+        description = request.form["description"]
+        location = request.form["location"]
+        date_found = request.form["date_found"]
+        contact = request.form["contact"]
+
+        cursor.execute("""
+            UPDATE found_items
+            SET item_name = %s,
+                category = %s,
+                color = %s,
+                brand = %s,
+                description = %s,
+                location = %s,
+                date_found = %s,
+                contact = %s
+            WHERE id = %s AND user_id = %s
+        """, (
+            item_name,
+            category,
+            color,
+            brand,
+            description,
+            location,
+            date_found,
+            contact,
+            item_id,
+            session["user_id"]
+        ))
+
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        flash("Found item report updated successfully.", "success")
+        return redirect(url_for("my_reports"))
+
+    cursor.execute("""
+        SELECT * FROM found_items
+        WHERE id = %s AND user_id = %s
+    """, (item_id, session["user_id"]))
+
+    item = cursor.fetchone()
+
+    cursor.close()
+    conn.close()
+
+    if item is None:
+        flash("Report not found.", "warning")
+        return redirect(url_for("my_reports"))
+
+    return render_template("edit_found.html", item=item)
 
 @app.route("/items")
 def items():
