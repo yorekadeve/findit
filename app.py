@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
+from functools import wraps
 import mysql.connector
 import os
 from datetime import date
@@ -18,12 +19,21 @@ def get_db():
         database=os.getenv("MYSQL_DATABASE")
     )
 
+def login_required(route_function):
+    @wraps(route_function)
+    def protected_route(*args, **kwargs):
+        if "user_id" not in session:
+            flash("Please log in to continue.", "warning")
+            return redirect(url_for("login"))
+        return route_function(*args, **kwargs)
+    return protected_route
 
 @app.route("/")
 def home():
     return render_template("index.html")
 
 @app.route("/report-lost", methods=["GET", "POST"])
+@login_required
 def report_lost():
     if request.method == "POST":
         item_name = request.form["item_name"]
@@ -53,6 +63,7 @@ def report_lost():
     return render_template("report_lost.html")
 
 @app.route("/report-found", methods=["GET", "POST"])
+@login_required
 def report_found():
     if request.method == "POST":
         item_name = request.form["item_name"]
@@ -98,6 +109,7 @@ def items():
     return render_template("items.html", lost_items=lost_items, found_items=found_items)
 
 @app.route("/matches", methods=["GET", "POST"])
+@login_required
 def matches():
     conn = get_db()
     cursor = conn.cursor(dictionary=True)
