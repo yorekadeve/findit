@@ -178,6 +178,7 @@
 
             {% if session.get("user_id") %}
                 <span class="welcome">Hi, {{ session.get("full_name") }}</span>
+                <a href="/my-reports">My Reports</a>
                 <a href="/logout">Logout</a>
             {% else %}
                 <a href="/register">Register</a>

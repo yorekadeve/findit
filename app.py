@@ -50,9 +50,9 @@ def report_lost():
 
         cursor.execute("""
             INSERT INTO lost_items
-            (item_name, category, color, brand, description, location, date_lost, contact)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-        """, (item_name, category, color, brand, description, location, date_lost, contact))
+            (user_id,item_name, category, color, brand, description, location, date_lost, contact)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s,%s)
+        """, (session["user_id"],item_name, category, color, brand, description, location, date_lost, contact))
 
         conn.commit()
         cursor.close()
@@ -80,9 +80,9 @@ def report_found():
 
         cursor.execute("""
             INSERT INTO found_items
-            (item_name, category, color, brand, description, location, date_found, contact)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-        """, (item_name, category, color, brand, description, location, date_found, contact))
+            (user_id,item_name, category, color, brand, description, location, date_found, contact)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s,%s)
+        """, (session["user_id"],item_name, category, color, brand, description, location, date_found, contact))
 
         conn.commit()
         cursor.close()
@@ -91,6 +91,33 @@ def report_found():
         return "Found item reported successfully!"
 
     return render_template("report_found.html")
+
+@app.route("/my-reports")
+@login_required
+def my_reports():
+    conn = get_db()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT * FROM lost_items
+        WHERE user_id = %s
+    """, (session["user_id"],))
+    lost_items = cursor.fetchall()
+
+    cursor.execute("""
+        SELECT * FROM found_items
+        WHERE user_id = %s
+    """, (session["user_id"],))
+    found_items = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template(
+        "my_reports.html",
+        lost_items=lost_items,
+        found_items=found_items
+    )
 
 @app.route("/items")
 def items():
