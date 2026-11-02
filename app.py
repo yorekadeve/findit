@@ -1,12 +1,14 @@
-from flask import Flask, render_template, request
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 import mysql.connector
 import os
 from datetime import date
 from dotenv import load_dotenv
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
 load_dotenv()
+
+app.secret_key = os.getenv("SECRET_KEY")
 
 def get_db():
     return mysql.connector.connect(
@@ -293,6 +295,73 @@ def return_item(match_id):
     conn.close()
 
     return redirect(url_for("matches"))
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        full_name = request.form["full_name"]
+        email = request.form["email"]
+        phone = request.form["phone"]
+        password = request.form["password"]
+        confirm_password = request.form["confirm_password"]
+
+        if password != confirm_password:
+            return "Passwords do not match."
+
+        password_hash = generate_password_hash(password)
+
+        conn = get_db()
+        cursor = conn.cursor()
+
+        cursor.execute("""
+            INSERT INTO users
+            (full_name, email, phone, password_hash, role)
+            VALUES (%s, %s, %s, %s, %s)
+        """, (full_name, email, phone, password_hash, "user"))
+
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        return redirect(url_for("login"))
+
+    return render_template("register.html")
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        email = request.form["email"]
+        password = request.form["password"]
+
+        conn = get_db()
+        cursor = conn.cursor(dictionary=True)
+
+        cursor.execute("""
+            SELECT * FROM users
+            WHERE email = %s
+        """, (email,))
+
+        user = cursor.fetchone()
+
+        cursor.close()
+        conn.close()
+
+        if user and check_password_hash(user["password_hash"], password):
+            session["user_id"] = user["id"]
+            session["full_name"] = user["full_name"]
+            session["role"] = user["role"]
+
+            return redirect(url_for("home"))
+        else:
+            return "Invalid email or password."
+
+    return render_template("login.html")
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    flash("You have been logged out successfully.", "success")
+    return redirect(url_for("home"))
 
 if __name__ == "__main__":
     app.run(debug=True)
