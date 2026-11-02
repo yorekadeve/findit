@@ -15,7 +15,9 @@
         <th>Location</th>
         <th>Date Lost</th>
         <th>Status</th>
+        <th>Action</th>
     </tr>
+
     {% for item in lost_items %}
     <tr>
         <td>{{ item.item_name }}</td>
@@ -23,6 +25,12 @@
         <td>{{ item.location }}</td>
         <td>{{ item.date_lost }}</td>
         <td>{{ item.status }}</td>
+        <td>
+            <form action="/delete-lost/{{ item.id }}" method="POST"
+                  onsubmit="return confirm('Are you sure you want to delete this report?');">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
     </tr>
     {% endfor %}
 </table>
@@ -40,7 +48,9 @@
         <th>Location</th>
         <th>Date Found</th>
         <th>Status</th>
+        <th>Action</th>
     </tr>
+
     {% for item in found_items %}
     <tr>
         <td>{{ item.item_name }}</td>
@@ -48,10 +58,17 @@
         <td>{{ item.location }}</td>
         <td>{{ item.date_found }}</td>
         <td>{{ item.status }}</td>
+        <td>
+            <form action="/delete-found/{{ item.id }}" method="POST"
+                  onsubmit="return confirm('Are you sure you want to delete this report?');">
+                <button type="submit">Delete</button>
+            </form>
+        </td>
     </tr>
     {% endfor %}
 </table>
 {% else %}
 <p>You have not reported any found items.</p>
 {% endif %}
+
 {% endblock %}

@@ -119,6 +119,43 @@ def my_reports():
         found_items=found_items
     )
 
+@app.route("/delete-lost/<int:item_id>", methods=["POST"])
+@login_required
+def delete_lost(item_id):
+    conn = get_db()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        DELETE FROM lost_items
+        WHERE id = %s AND user_id = %s
+    """, (item_id, session["user_id"]))
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    flash("Lost item report deleted successfully.", "success")
+    return redirect(url_for("my_reports"))
+
+
+@app.route("/delete-found/<int:item_id>", methods=["POST"])
+@login_required
+def delete_found(item_id):
+    conn = get_db()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        DELETE FROM found_items
+        WHERE id = %s AND user_id = %s
+    """, (item_id, session["user_id"]))
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    flash("Found item report deleted successfully.", "success")
+    return redirect(url_for("my_reports"))
+
 @app.route("/items")
 def items():
     conn = get_db()
@@ -365,6 +402,7 @@ def register():
         return redirect(url_for("login"))
 
     return render_template("register.html")
+
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
